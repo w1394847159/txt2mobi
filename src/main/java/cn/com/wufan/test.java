@@ -14,7 +14,7 @@ public class test {
     private javax.swing.table.DefaultTableModel tList;
 
     public static void main(String[] args) {
-        new CreteMobi("G:\\新建文件夹\\知轩藏书-藏尽网络中最好的精校小说", "G:\\test1\\知轩藏书-藏尽网络中最好的精校小说", "《文体巨星》作者：大佑佑.txt").createEBook();
+        new CreteMobi("G:\\新建文件夹\\知轩藏书-藏尽网络中最好的精校小说", "G:\\test1\\知轩藏书-藏尽网络中最好的精校小说", "《剑之学者》作者：Le司马离.txt").createEBook();
     }
 
 }

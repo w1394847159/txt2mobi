@@ -178,7 +178,7 @@ public class CreteMobi {
      */
     void preProcessTxt(){
         File file = new File(filePath);
-        String regex = ".*第[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節]{1}.*";
+        String regex = "　*第[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]{1}.*";
 
         //标题长度 默认4096
         int titleMax = 4096;
