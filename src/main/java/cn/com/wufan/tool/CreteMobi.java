@@ -2,6 +2,7 @@ package cn.com.wufan.tool;
 
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -59,9 +60,44 @@ public class CreteMobi {
      */
     public Boolean createEBook(){
 
+        if(!fileName.endsWith(".txt")){
+            System.out.println(filePath + "----文件不存在");
+            return false;
+        }
+
+
         File file = new File(savePrefix + File.separator + fileName.replace(".txt",".mobi"));
         if(file.exists()){
             System.out.println(fileName +"已存在");
+            return false;
+        }
+
+
+        //定义支持的编码格式
+        ArrayList<Object> encodings = new ArrayList<>();
+        encodings.add("GB18030");
+        encodings.add("UTF-8");
+        encodings.add("UTF-16");
+
+
+
+        //获取TOC: 标题: 行号
+        //预处理标题
+        Vector lists = null;
+        int listslen = 0;
+        for (int i = 0; i < encodings.size(); i++) {
+            setting.put(ENCODING.getContext(),encodings.get(i));
+            preProcessTxt();
+            lists = tList.getDataVector();
+            listslen = lists.size();
+            if (listslen != 0) {
+                break;
+            }
+        }
+
+        //判断是否存在可解析编码
+        if(listslen == 0){
+            System.out.println(fileName + "编码格式不支持");
             return false;
         }
 
@@ -83,27 +119,6 @@ public class CreteMobi {
         long sTime = System.currentTimeMillis();
 
 
-        //获取TOC: 标题: 行号
-        //预处理标题
-        preProcessTxt();
-        Vector lists = tList.getDataVector();
-        int listslen = lists.size();
-        //默认编码不是GB18030时会出现报错
-        if(listslen == 0 ){
-            //更改编码重新测试
-            setting.put(ENCODING.getContext(),"utf-8");
-            preProcessTxt();
-            lists = tList.getDataVector();
-            listslen = lists.size();
-            if(listslen == 0){
-                System.out.println(fileName + "标题处理出错");
-                return false;
-            }
-            s = ToolJava.readText(filePath, (String) setting.get(ENCODING.getContext()));
-            split = s.split("[\r]?\n");
-            lCount = split.length;
-
-        }
 
         //预处理元数据
         getMetaData();
@@ -163,7 +178,7 @@ public class CreteMobi {
      */
     void preProcessTxt(){
         File file = new File(filePath);
-        String regex = ".*第.{1,5}章.*";
+        String regex = ".*第[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節]{1}.*";
 
         //标题长度 默认4096
         int titleMax = 4096;
